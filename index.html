@@ -10,7 +10,7 @@
 <style>
 :root{
   --bg:#F8FAFC; --card:#FFFFFF; --border:#E2E8F0; --mint:#D8FBE5; --mint2:#CCFDDC;
-  --green:#0E5E52; --green-soft:#0E5E52; --orange:#FF6B35; --orange-strong:#FF4D00;
+  --green:#0E5E52; --orange:#FF6B35; --orange-strong:#FF4D00;
   --ink:#1E293B; --mute:#64748B; --mute2:#94A3B8;
   --ok-bg:#D1FAE5; --ok-tx:#065F46; --proc-bg:#FEF3C7; --proc-tx:#92400E;
   --crit-bg:#FEE2E2; --crit-tx:#991B1B; --neu-bg:#F1F5F9; --neu-tx:#475569;
@@ -19,9 +19,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Poppins','Segoe UI',Roboto,Helvetica,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
 .wrap{max-width:1360px;margin:0 auto;padding:22px 20px 60px}
-a{color:inherit}
 
-/* Header */
 header{background:linear-gradient(120deg,var(--mint) 0%,var(--mint2) 100%);border:1px solid var(--border);border-radius:16px;padding:22px 26px;margin-bottom:22px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 header .kick{display:flex;align-items:center;gap:9px;color:var(--green);font-weight:600;font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
 header .kick .sq{width:12px;height:12px;background:var(--orange);border-radius:3px}
@@ -29,63 +27,69 @@ header h1{color:var(--green);font-size:26px;font-weight:700;letter-spacing:-.3px
 header .sub{color:#0E5E52aa;font-size:13.5px;margin-top:4px}
 header .wm{position:absolute;right:26px;top:22px;color:var(--green);font-weight:700;font-size:20px;opacity:.55;letter-spacing:-.5px}
 
-/* KPI cards */
+/* KPI cards (interactivas) */
 .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:22px}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 16px 14px;box-shadow:var(--shadow);transition:.18s}
-.kpi:hover{box-shadow:var(--shadow-h);transform:translateY(-2px)}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow);cursor:pointer;transition:.18s;position:relative}
+.kpi:hover{box-shadow:var(--shadow-h);transform:translateY(-3px);border-color:var(--mint2)}
+.kpi:active{transform:translateY(-1px)}
+.kpi.active{border-color:var(--green);box-shadow:0 0 0 3px #0E5E5215,var(--shadow-h)}
+.kpi.active::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:12px;right:14px;color:var(--green);font-size:12px}
 .kpi .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:15px;margin-bottom:10px}
 .kpi .val{font-size:26px;font-weight:700;color:var(--green);line-height:1}
 .kpi .lab{font-size:12px;color:var(--mute);margin-top:5px;font-weight:500}
+.kpi .hint{font-size:10px;color:var(--mute2);margin-top:3px;font-weight:500;opacity:0;transition:.18s}
+.kpi:hover .hint{opacity:1}
 .ic.mint{background:var(--mint);color:var(--green)} .ic.org{background:#FFE7DC;color:var(--orange-strong)}
 .ic.ok{background:var(--ok-bg);color:var(--ok-tx)} .ic.proc{background:var(--proc-bg);color:var(--proc-tx)}
 .ic.neu{background:var(--neu-bg);color:var(--neu-tx)} .ic.crit{background:var(--crit-bg);color:var(--crit-tx)}
-.kpi.big .val{font-size:28px}
 .gaugewrap{display:flex;align-items:center;gap:12px}
-.gauge{--p:0;width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--orange) calc(var(--p)*1%),#EFF3F7 0);display:grid;place-items:center;flex:0 0 auto}
+.gauge{--p:0;width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--orange) calc(var(--p)*1%),#EFF3F7 0);display:grid;place-items:center;flex:0 0 auto;position:relative}
 .gauge::before{content:'';width:38px;height:38px;background:#fff;border-radius:50%;position:absolute}
 .gauge span{position:relative;font-size:12.5px;font-weight:700;color:var(--green)}
 
-/* Charts */
 .charts{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px;margin-bottom:22px}
 .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
 .panel h3{color:var(--green);font-size:13.5px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .panel h3 i{color:var(--orange)}
+.panel h3 .live{margin-left:auto;font-size:10px;font-weight:600;color:var(--mute2);background:var(--neu-bg);padding:2px 8px;border-radius:10px;text-transform:none;letter-spacing:0}
 .chart-box{position:relative;height:210px}
 
-/* Filters */
 .filters{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:18px}
 .filters .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.search{flex:1 1 240px;position:relative;min-width:220px}
+.search{flex:1 1 220px;position:relative;min-width:200px}
 .search i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--mute2);font-size:13px}
 .search input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13.5px;background:#fff;color:var(--ink)}
 .search input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px #0E5E5218}
-select{padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;background:#fff;color:var(--ink);cursor:pointer;min-width:130px}
+select{padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;background:#fff;color:var(--ink);cursor:pointer;min-width:124px}
 select:focus{outline:none;border-color:var(--green)}
 .btn-clear{padding:9px 14px;border:1px solid var(--border);background:#fff;color:var(--mute);border-radius:10px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;transition:.15s}
 .btn-clear:hover{border-color:var(--orange);color:var(--orange-strong)}
 .count-pill{margin-left:auto;background:var(--mint);color:var(--green);padding:7px 14px;border-radius:20px;font-weight:600;font-size:12.5px}
 
-/* Table */
 .tablewrap{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
 .tscroll{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:900px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:1000px}
 thead th{background:#F1F7F5;color:var(--green);text-align:left;padding:12px 14px;font-weight:600;font-size:12px;white-space:nowrap;cursor:pointer;user-select:none;border-bottom:2px solid var(--mint);position:sticky;top:0}
 thead th:hover{background:var(--mint)}
-thead th .fa-sort,thead th .fa-sort-up,thead th .fa-sort-down{margin-left:5px;font-size:10px;color:var(--mute2)}
+thead th i{margin-left:5px;font-size:10px;color:var(--mute2)}
 thead th.nosort{cursor:default}
 tbody td{padding:11px 14px;border-bottom:1px solid #EEF2F6;vertical-align:middle}
 tbody tr{transition:.12s}
 tbody tr:hover{background:#F7FBFA}
-.tarea-cell{max-width:340px;font-weight:500;color:var(--ink)}
+tbody tr.row-alert{background:#FFF7F5}
+tbody tr.row-alert:hover{background:#FFEFEA}
+tbody tr.row-alert td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
+.tarea-cell{max-width:320px;font-weight:500;color:var(--ink)}
 .tarea-cell small{display:block;color:var(--mute2);font-weight:400;font-size:11px;margin-top:2px}
 .mesa-tag{font-weight:600;color:var(--green);white-space:nowrap}
 .badge{display:inline-block;padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap}
 .b-ok{background:var(--ok-bg);color:var(--ok-tx)} .b-proc{background:var(--proc-bg);color:var(--proc-tx)}
 .b-neu{background:var(--neu-bg);color:var(--neu-tx)} .b-crit{background:var(--crit-bg);color:var(--crit-tx)}
 .p-alta{background:#FFE7DC;color:var(--orange-strong)} .p-media{background:#FEF3C7;color:#92400E} .p-baja{background:#F1F5F9;color:#475569}
+.plazo-badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:600;background:#EEF6F4;color:var(--green);border:1px solid #DCEBE7;white-space:nowrap}
 .prog{display:flex;align-items:center;gap:8px;min-width:96px}
 .prog .bar{flex:1;height:7px;background:#EFF3F7;border-radius:6px;overflow:hidden}
-.prog .fill{height:100%;background:linear-gradient(90deg,#34D399,#0E5E52);border-radius:6px}
+.prog .fill{height:100%;border-radius:6px;transition:width .3s}
 .prog span{font-size:11.5px;font-weight:600;color:var(--green);width:32px;text-align:right}
 .actions{display:flex;gap:6px;white-space:nowrap}
 .ico-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--green);cursor:pointer;display:grid;place-items:center;font-size:12px;transition:.15s}
@@ -93,7 +97,6 @@ tbody tr:hover{background:#F7FBFA}
 .ico-btn.copy:hover{background:#FFE7DC;border-color:#FFD4C2;color:var(--orange-strong)}
 .empty{padding:40px;text-align:center;color:var(--mute2)}
 
-/* Modal */
 .modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
 .modal-bg.show{display:flex}
 .modal{background:#fff;border-radius:16px;max-width:620px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
@@ -111,7 +114,6 @@ tbody tr:hover{background:#F7FBFA}
 .btn-primary{background:var(--orange);color:#fff} .btn-primary:hover{background:var(--orange-strong)}
 .btn-ghost{background:#fff;border:1px solid var(--border);color:var(--green)} .btn-ghost:hover{background:var(--mint)}
 
-/* Data quality */
 .dq{margin-top:22px;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--orange);border-radius:14px;padding:18px 22px;box-shadow:var(--shadow)}
 .dq h3{color:var(--green);font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:9px}
 .dq h3 i{color:var(--orange)}
@@ -120,7 +122,6 @@ tbody tr:hover{background:#F7FBFA}
 .dq li i{color:var(--orange);font-size:11px;margin-top:4px}
 .dq li b{color:var(--ink)}
 
-/* toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:12px 22px;border-radius:12px;font-size:13.5px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:.3s;z-index:60;display:flex;align-items:center;gap:9px}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
@@ -140,7 +141,7 @@ tbody tr:hover{background:#F7FBFA}
   <div class="kpis" id="kpis"></div>
 
   <div class="charts">
-    <div class="panel"><h3><i class="fa-solid fa-chart-column"></i> Avance por mesa</h3><div class="chart-box"><canvas id="chMesa"></canvas></div></div>
+    <div class="panel"><h3><i class="fa-solid fa-chart-column"></i> Avance por mesa <span class="live" id="liveMesa">vista completa</span></h3><div class="chart-box"><canvas id="chMesa"></canvas></div></div>
     <div class="panel"><h3><i class="fa-solid fa-chart-pie"></i> Distribución por estado</h3><div class="chart-box"><canvas id="chEstado"></canvas></div></div>
     <div class="panel"><h3><i class="fa-solid fa-layer-group"></i> Compromisos por prioridad</h3><div class="chart-box"><canvas id="chPrio"></canvas></div></div>
   </div>
@@ -149,6 +150,7 @@ tbody tr:hover{background:#F7FBFA}
     <div class="row">
       <div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="q" type="text" placeholder="Buscar tarea, responsable, entregable, comentario..."></div>
       <select id="fMesa"><option value="">Todas las mesas</option></select>
+      <select id="fEje"><option value="">Todos los ejes</option></select>
       <select id="fEstado"><option value="">Todos los estados</option></select>
       <select id="fResp"><option value="">Todos los responsables</option></select>
       <select id="fPrio"><option value="">Toda prioridad</option></select>
@@ -168,6 +170,7 @@ tbody tr:hover{background:#F7FBFA}
           <th data-k="prioridad">Prioridad <i class="fa-solid fa-sort"></i></th>
           <th data-k="estado">Estado <i class="fa-solid fa-sort"></i></th>
           <th data-k="avance">Avance <i class="fa-solid fa-sort"></i></th>
+          <th data-k="plazo">Plazo <i class="fa-solid fa-sort"></i></th>
           <th data-k="fecha_minuta">Fecha minuta <i class="fa-solid fa-sort"></i></th>
           <th class="nosort">Acciones</th>
         </tr></thead>
@@ -197,57 +200,74 @@ tbody tr:hover{background:#F7FBFA}
 
 <script>
 const DATA = [{"id": 1, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Estrategia de Contenido", "tarea": "Enviar propuesta de mensaje de bienvenida y flujo al equipo", "responsable": "Trinidad Madrigal", "prioridad": "Alta", "plazo": "Inmediato", "fecha_obj": null, "entregable": "Documento / propuesta compartida", "estado": "En curso", "avance": 0.5, "dependencias": "—", "comentario": "Compartido en pantalla durante la sesión; pendiente envío formal.", "fecha_act": null}, {"id": 2, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Estrategia de Contenido", "tarea": "Desarrollar botoneras y refinar el mensaje de onboarding (4 botones)", "responsable": "Felipe Arroyo / Joaquín Cáceres", "prioridad": "Alta", "plazo": "Esta semana", "fecha_obj": "29-07-2026", "entregable": "Mensaje estructurado", "estado": "Completado", "avance": 1, "dependencias": "Definición de dimensiones de contenido", "comentario": "Propuesta de mensaje enviada a Trini. Personalización con nombre del cliente y concesionario (ej. Salazar Israel).", "fecha_act": "29-07-2026"}, {"id": 3, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Contenido / Onboarding", "tarea": "Armar brief y desarrollar el video de bienvenida", "responsable": "Felipe Arroyo (brief) / Trinidad Madrigal (video) / David", "prioridad": "Alta", "plazo": "Esta semana", "fecha_obj": null, "entregable": "Brief + video de onboarding", "estado": "En curso", "avance": 0.35, "dependencias": "Incorporación de David", "comentario": "Contenido definido para el video (mantención como inversión, servicio autorizado, homologado). Brief parcial generado.", "fecha_act": "29-07-2026"}, {"id": 4, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Datos / Paula", "tarea": "Respaldar y estructurar la información para traspaso a Paula", "responsable": "Felipe Arroyo / Joaquín Cáceres", "prioridad": "Media", "plazo": "En curso", "fecha_obj": null, "entregable": "Set de información detallado", "estado": "En curso", "avance": 0.5, "dependencias": "Enriquecimiento de Paula (Pablo Polanco)", "comentario": "Trinidad crea la plantilla (primer paso); falta definir implementador. Metadatos pendientes: Enzo coordina con Vito y luego con Pablo para habilitar Paula.", "fecha_act": null}, {"id": 5, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Gestión de Datos", "tarea": "Levantar dónde vive y dónde se carga la información (API doc. / back office / planillas)", "responsable": "Felipe Arroyo / Joaquín Cáceres", "prioridad": "Alta", "plazo": "En curso", "fecha_obj": null, "entregable": "Levantamiento de fuentes de datos", "estado": "En curso", "avance": 0.25, "dependencias": "Migración a back office (Pablo Polanco)", "comentario": "Padrón solo vía Clave Única → requiere instructivo. Mapear cada contenido para alimentar a Paula.", "fecha_act": null}, {"id": 6, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Automatización", "tarea": "Definir el trigger de entrega y el orquestador de flujos", "responsable": "Mesa 1", "prioridad": "Alta", "plazo": "Próxima mesa", "fecha_obj": null, "entregable": "Definición técnica", "estado": "No iniciado", "avance": 0, "dependencias": "Validación con Enzo", "comentario": "Ruta crítica del flujo de onboarding.", "fecha_act": null}, {"id": 7, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Arquitectura", "tarea": "Validar con Enzo dónde reside la información y la orquestación", "responsable": "Trinidad Madrigal / Mesa 1", "prioridad": "Alta", "plazo": "Próxima mesa", "fecha_obj": null, "entregable": "Definición de arquitectura", "estado": "No iniciado", "avance": 0, "dependencias": "Disponibilidad de Enzo", "comentario": null, "fecha_act": null}, {"id": 8, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Producto / Beneficios", "tarea": "Definir con Ricardo el mix de beneficios y accesorios (segmentado por tipo de cliente), inclusión de MPP y producto de pre-chequeo", "responsable": "Felipe Arroyo / Ricardo", "prioridad": "Media", "plazo": "Miércoles 05-08", "fecha_obj": null, "entregable": "Definición de producto", "estado": "En curso", "avance": 0.15, "dependencias": "Cruza con Mesa 2 (MPP)", "comentario": "Armar pool de beneficios (segmentado por valor y por marca) para la reunión con Ricardo del miércoles. Evaluar inclusión de MPP.", "fecha_act": null}, {"id": 9, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Cumplimiento Legal", "tarea": "Definir consentimiento de datos separado del contrato de compra (Ley de Protección de Datos)", "responsable": "Francisco Cortés / Legal", "prioridad": "Media", "plazo": "Fin de año", "fecha_obj": null, "entregable": "Checkbox traceable en venta y postventa", "estado": "En curso", "avance": 0.2, "dependencias": "Área legal", "comentario": "Atrasado: la consultoría aporta poco. Francisco Cortés operativiza el marcaje; Trinidad aporta material (regímenes, fuentes de licitud para marketing). Posible aplazamiento de la ley.", "fecha_act": null}, {"id": 10, "mesa": "Mesa 1", "fecha_minuta": "27-07-2026", "eje": "Ayuda / Contactabilidad", "tarea": "Alinear la dimensión Ayuda/SAC con los scripts de contactabilidad", "responsable": "Mesa 1", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Scripts alineados", "estado": "No iniciado", "avance": 0, "dependencias": "Proyecto paralelo de contactabilidad", "comentario": "Canales de contacto en revisión junto con scripts (tema paralelo activo).", "fecha_act": null}, {"id": 11, "mesa": "Mesa 1", "fecha_minuta": "03-08-2026", "eje": "Producto / Beneficios", "tarea": "Diseñar el punto de contacto intermedio pre-1.ª mantención (engagement: lavado / inspección tipo clínica / Check Road) y levantar su factibilidad", "responsable": "Felipe Arroyo / Trinidad Madrigal", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Producto de contacto intermedio", "estado": "En curso", "avance": 0.1, "dependencias": "Cruza con Mesa 5 (puntos de contacto)", "comentario": "Check Road/Road Ready (levantado de EE.UU.); no llamarlo revisión técnica (sin equipo de gases). Disponibilizar agendas en baja demanda.", "fecha_act": null}, {"id": 12, "mesa": "Mesa 1", "fecha_minuta": "03-08-2026", "eje": "Contenido / Onboarding", "tarea": "Incorporar al onboarding contenido de alta búsqueda (revisión técnica, homologado) según el keyword research", "responsable": "Trinidad Madrigal", "prioridad": "Baja", "plazo": "Por definir", "fecha_obj": null, "entregable": "Contenido SEO de onboarding", "estado": "No iniciado", "avance": 0, "dependencias": "Keyword research de Google", "comentario": "\"Mantención\" es la búsqueda más baja; revisión técnica el mayor volumen. Educar en el momento cero.", "fecha_act": null}, {"id": 13, "mesa": "Mesa 1", "fecha_minuta": "11-08-2026", "eje": "Contenido del Mensaje", "tarea": "Adoptar un landing como fuente única de los plazos normativos/garantía, referenciado en WhatsApp y email", "responsable": "Trinidad Madrigal", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Landing de contenido normativo", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Hoy los plazos normativos están duplicados en ambas piezas; al cambiar la norma quedarían desalineados. El landing evita mantener dos plantillas.", "fecha_act": null}, {"id": 14, "mesa": "Mesa 1", "fecha_minuta": "11-08-2026", "eje": "Cumplimiento Legal", "tarea": "Revisar con legal el texto de garantía condicionada a la red de servicio (mayor exposición legal)", "responsable": "Francisco Cortés / Legal", "prioridad": "Alta", "plazo": "Por definir", "fecha_obj": null, "entregable": "Texto validado por legal", "estado": "No iniciado", "avance": 0, "dependencias": "Cruza con homologado", "comentario": "Marcado como prioridad alta por el análisis del mensaje: la garantía condicionada a la red es el mayor punto de exposición legal.", "fecha_act": null}, {"id": 15, "mesa": "Mesa 1", "fecha_minuta": "11-08-2026", "eje": "Producto / Beneficios", "tarea": "Evaluar integrar el lavado de cortesía con Quiter como pre-agenda de lavado (agendable)", "responsable": "Joaquín Cáceres / Ricardo", "prioridad": "Baja", "plazo": "Por definir", "fecha_obj": null, "entregable": "Lavado agendable", "estado": "No iniciado", "avance": 0, "dependencias": "Cruza con Ricardo", "comentario": "Para que el cliente pueda agendar el lavado de cortesía (3.º-4.º mes); casi una pre-agenda de lavado. Verlo con Ricardo.", "fecha_act": null}, {"id": 16, "mesa": "Mesa 1", "fecha_minuta": "11-08-2026", "eje": "Contenido / Onboarding", "tarea": "Diseñar el calendario de comunicaciones de los primeros meses/años (revisión técnica, permiso de circulación, vacaciones) para preparar al cliente antes del predictivo", "responsable": "Felipe Arroyo", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Calendario de comunicaciones", "estado": "No iniciado", "avance": 0, "dependencias": "Cruza con Mesa 5", "comentario": "Puntos de contacto por mailing y Paula, al menos mensuales los primeros 6 meses y luego más espaciados, hasta que el cliente entre al predictivo.", "fecha_act": null}, {"id": 17, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Gestión MPP", "tarea": "Construir la matriz de gestión de MPP por marca (acceso, método, vigencia, asociación, tolerancia, programas)", "responsable": "Fernando Lagos", "prioridad": "Alta", "plazo": "En curso", "fecha_obj": null, "entregable": "Matriz MPP", "estado": "En curso", "avance": 0.5, "dependencias": "—", "comentario": "Columnas prioritarias: acceso y método de obtención. Agregar contraparte/correo de envío periódico por marca.", "fecha_act": null}, {"id": 18, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Gestión MPP", "tarea": "Consolidar y estandarizar en un formato único las bases disponibles (Kia, Toyota, Astara)", "responsable": "Fernando Lagos", "prioridad": "Alta", "plazo": "En curso", "fecha_obj": null, "entregable": "Bases unificadas", "estado": "En curso", "avance": 0.55, "dependencias": "—", "comentario": "Recabadas Chevrolet, Astara, Kia y Toyota; falta MG y Stellantis. Requiere conversor de formato (línea de km vs. pack).", "fecha_act": null}, {"id": 19, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Gestión MPP", "tarea": "Conseguir bases pendientes (Stellantis, Hyundai) y confirmar Subaru / Derco / Ford y MG", "responsable": "Fernando Lagos / Felipe Arroyo", "prioridad": "Alta", "plazo": "Por gestionar", "fecha_obj": null, "entregable": "Bases obtenidas", "estado": "En curso", "avance": 0.6, "dependencias": "Contacto con las marcas (Samuel)", "comentario": "Solo faltan Stellantis (completa) y MG; el resto ya recabado. Son marcas de Samuel: gestionar con él (reunión) el contacto directo con las marcas para no depender del intermediario.", "fecha_act": null}, {"id": 20, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Datos / Predictivo", "tarea": "Resolver Chevrolet vía query interna sobre Quiter (sin Excel)", "responsable": "Fernando Lagos / Roberto", "prioridad": "Media", "plazo": "En curso", "fecha_obj": null, "entregable": "Query / base interna", "estado": "En curso", "avance": 0.3, "dependencias": "—", "comentario": "Verificar si la base se construye desde Quiter para que Roberto la extraiga en bruto e integrarla directo al predictivo.", "fecha_act": null}, {"id": 21, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Datos / Predictivo", "tarea": "Integrar la MPP al motor predictivo", "responsable": "Felipe Arroyo / Fernando Lagos / Roberto", "prioridad": "Alta", "plazo": "Próximo", "fecha_obj": null, "entregable": "MPP en predictivo", "estado": "En curso", "avance": 0.1, "dependencias": "Consolidación de bases", "comentario": "Roberto evaluará extraer la MPP desde la nota de venta para cubrir la primera mantención.", "fecha_act": null}, {"id": 22, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Modelo Operativo", "tarea": "Definir flujo mensual: campaña de agendamiento prioritario, cruce con predictivo y priorización al equipo de Carlos", "responsable": "Mesa 2", "prioridad": "Media", "plazo": "Ciclo mensual", "fecha_obj": null, "entregable": "Procedimiento operativo", "estado": "No iniciado", "avance": 0, "dependencias": "Integración al predictivo", "comentario": null, "fecha_act": null}, {"id": 23, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Levantamiento", "tarea": "Consultar a asistentes comerciales qué marcas venden MPP (reuniones cortas, no correo)", "responsable": "Joaquín Cáceres / Felipe Arroyo", "prioridad": "Media", "plazo": "Por agendar", "fecha_obj": "29-07-2026", "entregable": "Levantamiento por marca", "estado": "Completado", "avance": 1, "dependencias": "—", "comentario": "Riesgo de información histórica desactualizada.", "fecha_act": null}, {"id": 24, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Financiamiento", "tarea": "Definir con Jaime Seguel el tema financieras: asociación de la MPP (auto/cliente) y efecto del prepago", "responsable": "Joaquín Cáceres", "prioridad": "Media", "plazo": "Pendiente", "fecha_obj": "29-07-2026", "entregable": "Información de financieras", "estado": "Completado", "avance": 1, "dependencias": "Respuesta de Jaime Seguel", "comentario": "Información recibida de Jaime Seguel (marcas con MPP activa y financiamiento).", "fecha_act": null}, {"id": 25, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Producto / Beneficios", "tarea": "Averiguar primera inspección / mantenimientos de rodaje gratuitos por marca", "responsable": "Felipe Arroyo (subgerentes / jefes de taller)", "prioridad": "Baja", "plazo": "Por gestionar", "fecha_obj": null, "entregable": "Info de programas", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Ej.: Subaru primera inspección.", "fecha_act": null}, {"id": 26, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Modelo Operativo", "tarea": "Habilitar validación en línea VIN a VIN al agendar (MPP activa / no consumida)", "responsable": "Contact Center (equipo Carlos)", "prioridad": "Media", "plazo": "Según procedimiento", "fecha_obj": null, "entregable": "Validación en portal", "estado": "En curso", "avance": 0.1, "dependencias": "Acceso a portales por marca", "comentario": "Hallazgo: Narobial permite incrustar en la OT un link al portal de marca para validación del asesor. Los asesores ya validan en portal.", "fecha_act": null}, {"id": 27, "mesa": "Mesa 2", "fecha_minuta": "27-07-2026", "eje": "Gestión de Datos", "tarea": "Definir dónde alojar la información de MPP en un formato único", "responsable": "Mesa 2", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Repositorio unificado", "estado": "No iniciado", "avance": 0, "dependencias": "Alineado con arquitectura (Enzo)", "comentario": null, "fecha_act": null}, {"id": 28, "mesa": "Mesa 2", "fecha_minuta": "03-08-2026", "eje": "Contenido / Notificaciones", "tarea": "Recopilar y consolidar los textos/notificaciones de cara a cliente (Quiter/Narobial) en carpeta y Excel para revisión con Ricardo", "responsable": "Fernando Lagos", "prioridad": "Media", "plazo": "Miércoles 05-08", "fecha_obj": null, "entregable": "Compilado de textos", "estado": "En curso", "avance": 0.4, "dependencias": "Reunión de textos con Ricardo", "comentario": "Apertura, confirmación, cita activa, recordatorio, propuesta, entrega, documentos. Sin diferencia entre concesionarios; textos de Quiter desactivados, activos los de Narobial.", "fecha_act": null}, {"id": 29, "mesa": "Mesa 2", "fecha_minuta": "03-08-2026", "eje": "Gestión MPP", "tarea": "Definir la periodicidad y la contraparte de envío de la base de MPP por marca (correo automático mensual, respuesta directa a Roberto)", "responsable": "Joaquín Cáceres / Fernando Lagos", "prioridad": "Media", "plazo": "Esta semana", "fecha_obj": null, "entregable": "Envío periódico automatizado", "estado": "En curso", "avance": 0.5, "dependencias": "—", "comentario": "Acordado dejar el correo programado (Power Automate) con la contraparte definida; se deja programado esta semana.", "fecha_act": null}, {"id": 30, "mesa": "Mesa 2", "fecha_minuta": "03-08-2026", "eje": "Gestión MPP", "tarea": "Incorporar Nissan (NFM - mantención gratis incluida) al modelo, marcando coberturas por rango de fecha de compra", "responsable": "Fernando Lagos", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Nissan NFM mapeado", "estado": "No iniciado", "avance": 0, "dependencias": "Confirmar con supervisor de postventa", "comentario": "NFM (gratis, incluida en el auto, como Audi) con múltiples condiciones por fecha. Nissan en traspaso a Astara.", "fecha_act": null}, {"id": 31, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Integración Paula-Quiter", "tarea": "Configurar el webhook que dispara el mensaje de bienvenida al pasar la oportunidad a \"entregado\" en Quiter", "responsable": "Enzo Monsalve / Daniel Abarca / Martín Flores", "prioridad": "Alta", "plazo": "Próximos sprints", "fecha_obj": null, "entregable": "Webhook de disparo", "estado": "En curso", "avance": 0.5, "dependencias": "Productos digitales (Martín Flores)", "comentario": "Webhook aprobado/listo (confirmado por Felipe). Trigger: estado CLI al salir de \"Entregado\" en Llaima. Falta entregar el borrador del mensaje para que Paula lo gatille (conecta Mesa 3 con Mesa 1).", "fecha_act": null}, {"id": 32, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Contenido del Mensaje", "tarea": "Desarrollar el contenido del mensaje de bienvenida (botonera ≤5 botones, ~300 caracteres, con opción de modificar datos)", "responsable": "Felipe Arroyo / Trinidad Madrigal", "prioridad": "Alta", "plazo": "Próximos sprints", "fecha_obj": null, "entregable": "Mensaje + botonera", "estado": "En curso", "avance": 0.75, "dependencias": "Cruza con Mesa 1", "comentario": "Reformulado como journey omnicanal (WhatsApp corto abre + email profundiza). WhatsApp admite máx 3 botones (Documentos/Mantención/Beneficios); SAC se deriva por texto \"asesor\". Paula se declara asistente virtual. Variables: nombre, marca, modelo, fecha entrega, concesionario, sucursal, fecha estimada 1.ª mantención. Envío el día siguiente a la entrega. Indicador: lectura/CTR/respuesta.", "fecha_act": null}, {"id": 33, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Validación de Datos", "tarea": "Definir el mecanismo de validación básica (existencia/entregabilidad de teléfono y correo) al momento de la entrega, solo clientes nuevos", "responsable": "Mesa 3", "prioridad": "Alta", "plazo": "Por definir", "fecha_obj": null, "entregable": "Mecanismo de validación", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "El mensaje de bienvenida es el mejor validador; usar entregabilidad, no respuesta.", "fecha_act": null}, {"id": 34, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Calidad de Datos", "tarea": "Definir el mecanismo de corrección de datos post-facturación en Quiter (vía jefes de sucursal)", "responsable": "Felipe Arroyo / Jefes de sucursal", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Procedimiento de corrección", "estado": "No iniciado", "avance": 0, "dependencias": "Quiter bloquea edición post-factura", "comentario": null, "fecha_act": null}, {"id": 35, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Calidad de Datos", "tarea": "Descartar números/correos inválidos típicos (1111, +56111, a@a) en la carga", "responsable": "Daniel", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Regla de descarte", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": null, "fecha_act": null}, {"id": 36, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Gestión Operativa", "tarea": "Implementar reporte semanal al jefe con ejecutivos que cargan datos erróneos", "responsable": "Enzo Monsalve", "prioridad": "Media", "plazo": "Semanal", "fecha_obj": null, "entregable": "Reporte de calidad por ejecutivo", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Responsabiliza a ejecutivo y jefe por la calidad de datos.", "fecha_act": null}, {"id": 37, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Validación de Datos", "tarea": "Generar reporte de entregabilidad (mensajes válidos para WhatsApp) y trazabilidad por ejecutivo, cuidando el filtro de Meta", "responsable": "Pablo Polanco", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Reporte de trazabilidad", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Depurar base antes de enviar; el abuso puede pausar el número en Meta.", "fecha_act": null}, {"id": 38, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Integración Paula-Quiter", "tarea": "Generar el lead de venta en Quiter desde la interacción y cruzarlo con predictivo y segmentos de valor", "responsable": "Mesa 3 / Roberto Jaunez", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Lead + cruce predictivo", "estado": "No iniciado", "avance": 0, "dependencias": "Cruza con Mesa 5", "comentario": null, "fecha_act": null}, {"id": 39, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Integración Paula-Quiter", "tarea": "Definir si la carga de información a Paula se mantiene manual o se automatiza", "responsable": "Mesa 3", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Definición de carga", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Hoy la carga a Paula es manual.", "fecha_act": null}, {"id": 40, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Calidad de Datos", "tarea": "Estructurar el proyecto paralelo de calidad de datos (validador de cuentas, alerta de número en >3 cuentas, enriquecimiento)", "responsable": "Felipe Arroyo / Roberto Jaunez", "prioridad": "Baja", "plazo": "Por definir", "fecha_obj": null, "entregable": "Proyecto de calidad de datos", "estado": "No iniciado", "avance": 0, "dependencias": "Agrega lógica estructural", "comentario": "Se toma como proyecto paralelo (pensado para Vivido).", "fecha_act": null}, {"id": 41, "mesa": "Mesa 3", "fecha_minuta": "28-07-2026", "eje": "Gestión Operativa", "tarea": "Preparar la bajada al equipo de venta sobre rigurosidad en la confirmación de teléfono y correo", "responsable": "Enzo Monsalve / Joaquín Cáceres", "prioridad": "Alta", "plazo": "Antes de agosto", "fecha_obj": null, "entregable": "Comunicación al equipo de venta", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Los datos alimentan cupones a las marcas; deben estar triple chequeados.", "fecha_act": null}, {"id": 42, "mesa": "Mesa 3", "fecha_minuta": "07-08-2026", "eje": "Costos / Operación", "tarea": "Definir el modelo de costo de los envíos de WhatsApp (plantillas Meta) y su asunción por el equipo de Clientes tras el piloto", "responsable": "Joaquín Cáceres / Martín Flores / Enzo Monsalve", "prioridad": "Media", "plazo": "Post-piloto", "fecha_obj": null, "entregable": "Modelo de costo definido", "estado": "En curso", "avance": 0.1, "dependencias": "Productos digitales", "comentario": "~1.700 vehículos nuevos/mes (sin flota), ~8 mensajes/conversación, ~US$250/mes. Meta: US$0,0889 plantilla marketing / US$0,02 utilidad. Clientes asumiría el costo tras un piloto.", "fecha_act": null}, {"id": 43, "mesa": "Mesa 3", "fecha_minuta": "11-08-2026", "eje": "Contenido del Mensaje", "tarea": "Poblar placeholders y enlaces del mensaje (video por concesionario, formulario SAC, agendamiento) y cargar las plantillas en Paula/Meta", "responsable": "Felipe Arroyo / Trinidad Madrigal / Pablo Polanco", "prioridad": "Alta", "plazo": "Por definir", "fecha_obj": null, "entregable": "Plantillas cargadas en Paula", "estado": "No iniciado", "avance": 0, "dependencias": "Enlaces + validación de beneficios (Ricardo)", "comentario": "Resolver [Empresa]/[Marca]/[MES-AÑO]/[Número], enlaces (video, formulario, agenda), consentimiento/opt-out y precisión normativa del homologado antes de cargar.", "fecha_act": null}, {"id": 44, "mesa": "Mesa 3", "fecha_minuta": "11-08-2026", "eje": "Integración Paula-Quiter", "tarea": "Entregar los metadatos a Pablo para habilitar Paula (Enzo coordina con Vito y luego con Pablo)", "responsable": "Enzo Monsalve / Pablo Polanco", "prioridad": "Alta", "plazo": "Por definir", "fecha_obj": null, "entregable": "Metadatos entregados", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Pablo requiere los metadatos para avanzar; incluye el botón de reagendar/anular. Enzo se junta primero con Vito.", "fecha_act": null}, {"id": 45, "mesa": "Mesa 3", "fecha_minuta": "11-08-2026", "eje": "Calidad de Datos", "tarea": "Recuperar los datos de clientes de citas activas desde el campo observaciones de Quiter (hoy no alimentan la cuenta)", "responsable": "Roberto Jaunez / Carla Hernandez / Fernando Lagos", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Datos de citas recuperados", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Los datos de la cita activa (correo, teléfono) quedan en observaciones y no actualizan la cuenta en ~80% de los casos; se pierde mucha actualización.", "fecha_act": null}, {"id": 46, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Pre-agenda / 1ª Mantención", "tarea": "Configurar la pre-agenda automática de 1.ª mantención al momento de la venta (~8-9 meses), sin predictivo ad hoc", "responsable": "Roberto Jaunez / Enzo", "prioridad": "Alta", "plazo": "Por definir", "fecha_obj": null, "entregable": "Automatización de pre-agenda", "estado": "En curso", "avance": 0.3, "dependencias": "Arquitectura / orquestador (Enzo, cruza Mesa 1)", "comentario": "Gonza confirmó que la integración del agendamiento automático desde Yaima (Llaima) ya está generada; hay que iniciar las pruebas de habilitación. El predictivo queda como red de seguridad.", "fecha_act": null}, {"id": 47, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Integración MPP", "tarea": "Marcar en el predictivo las MPP disponibles (prioridad particular) desde las bases actualizadas", "responsable": "Roberto Jaunez", "prioridad": "Alta", "plazo": "En curso", "fecha_obj": null, "entregable": "MPP marcada en predictivo", "estado": "En curso", "avance": 0.5, "dependencias": "Base de Fernando Lagos (cruza Mesa 2)", "comentario": "Kia/Toyota incorporadas (31-07). Decisión: tratar la MPP como base separada de recuperación, no como marca dentro del predictivo. Revisar reglas antiguas (Nissan/Toyota).", "fecha_act": null}, {"id": 48, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Integración MPP", "tarea": "Agregar a la matriz de MPP el marcaje \"requiere corroboración en portal\" por marca", "responsable": "Fernando Lagos / Felipe Arroyo", "prioridad": "Media", "plazo": "Por gestionar", "fecha_obj": null, "entregable": "Columna en matriz MPP", "estado": "No iniciado", "avance": 0, "dependencias": "Cruza con Mesa 2", "comentario": "Base limpia (Kia/Toyota) vs. corroboración VIN a VIN.", "fecha_act": null}, {"id": 49, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Journey / Onboarding", "tarea": "Diseñar puntos de contacto intermedios entrega → 1.ª mantención (cortesía 3 meses, inspecciones de rodaje)", "responsable": "Felipe Arroyo", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Journey de onboarding", "estado": "No iniciado", "avance": 0, "dependencias": "Cruza con Mesa 1", "comentario": "Genera punto de datos intermedio y anticipa taller.", "fecha_act": null}, {"id": 50, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Flujo de Rescate", "tarea": "Construir el flujo de fuga/rescate (activaciones/clínicas en vez de llamar siempre)", "responsable": "Felipe Arroyo / Trinidad Madrigal", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Flujo antifuga", "estado": "En curso", "avance": 0.15, "dependencias": "—", "comentario": "Gonza pide priorizar la fuga. Distinguir rescate (indicios de pérdida) vs. permanencia. Sistematizar el feedback del predictivo para trabajar a los no-agendados; rescate con adicional/clínica según marca. Churn difícil de medir (no contractual).", "fecha_act": null}, {"id": 51, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Predictivo", "tarea": "Definir estrategia de canal por tipo de predictivo (efectivo=llamado, futuro=mail, rescate=WhatsApp/activación)", "responsable": "Mesa Predictivo / Trinidad Madrigal", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Journey por canal", "estado": "En curso", "avance": 0.35, "dependencias": "—", "comentario": "Piloto de Paula corriendo junto al contact (UPAM); primeros resultados bajo lo esperado (conversión aún muy inferior al ejecutivo).", "fecha_act": null}, {"id": 52, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Predictivo", "tarea": "Revisar tipificaciones del Contact Center y el feedback loop con el predictivo", "responsable": "Roberto Jaunez / Fernando Lagos", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Tipificaciones revisadas", "estado": "En curso", "avance": 0.2, "dependencias": "Tipificaciones de Carla", "comentario": "Carla actualizó las tipificaciones este año (envía las últimas ~3 meses); alinearlas con el flujo (representan cambios de flujo). Sistematizar el feedback (Contact/Paula/mail) en un mismo lenguaje. Hoy la exclusión es solo del mes vigente; el cliente vuelve el siguiente.", "fecha_act": null}, {"id": 53, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Predictivo", "tarea": "Evaluar carga de feedback histórico para exclusiones permanentes (pérdida total, vehículo vendido, cliente molesto)", "responsable": "Roberto Jaunez", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Reglas de exclusión permanentes", "estado": "No iniciado", "avance": 0, "dependencias": "Revisión de tipificaciones", "comentario": null, "fecha_act": null}, {"id": 54, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Predictivo", "tarea": "Resolver tratamiento de vehículos pérdida total en Quiter (salida de la base por bastidor)", "responsable": "Fernando Lagos / Roberto Jaunez / Carlos Simesen", "prioridad": "Baja", "plazo": "Próxima semana", "fecha_obj": null, "entregable": "Exclusión por bastidor", "estado": "En curso", "avance": 0.15, "dependencias": "Base histórica de Carlos", "comentario": "Roberto revisa el predictivo para incorporarla globalmente; definir marcaje predictivo vs. Quiter. Revisar caso seguro/reposición (HDI).", "fecha_act": null}, {"id": 55, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Priorización", "tarea": "Revisar prioridades del predictivo e incorporar segmentos de valor (VIP/Oro)", "responsable": "Roberto Jaunez / Felipe Arroyo", "prioridad": "Media", "plazo": "Próxima reunión", "fecha_obj": null, "entregable": "Prioridades actualizadas", "estado": "En curso", "avance": 0.25, "dependencias": "—", "comentario": "Acuerdo de priorización: 1) hasta 50.000 km (capacidad contact, hoy 33 ejecutivos) → 2) MPP como base aparte → 3) segmentos VIP/Oro (por RUT).", "fecha_act": null}, {"id": 56, "mesa": "Mesa 5", "fecha_minuta": "28-07-2026", "eje": "Coordinación", "tarea": "Convocar la sesión ampliada de la mesa del predictivo, sumando a Carlos y Diego", "responsable": "Joaquín Cáceres", "prioridad": "Alta", "plazo": "Esta semana", "fecha_obj": null, "entregable": "Reunión agendada", "estado": "Completado", "avance": 1, "dependencias": "—", "comentario": "Realizada el 31-07 con Trinidad, Carlos y Diego.", "fecha_act": null}, {"id": 57, "mesa": "Mesa 5", "fecha_minuta": "31-07-2026", "eje": "Integración MPP", "tarea": "Revisar los contratos de venta del año en Quiter para identificar la MPP y rescatar la primera mantención", "responsable": "Roberto Jaunez", "prioridad": "Alta", "plazo": "Próxima semana", "fecha_obj": null, "entregable": "Base de MPP desde contratos", "estado": "En curso", "avance": 0.1, "dependencias": "Contratos bien cargados en Quiter", "comentario": "En revisión, sin confirmación de cierre. Identificar la MPP no es 100% simple (también se vende en postventa).", "fecha_act": null}, {"id": 58, "mesa": "Mesa 5", "fecha_minuta": "31-07-2026", "eje": "Integración MPP", "tarea": "Cuadrar la información de MPP de las bases de financiamiento (Forum/Santander) contra el contrato de venta en Quiter", "responsable": "Fernando Lagos", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Validación cruzada VIN", "estado": "No iniciado", "avance": 0, "dependencias": "Bases de Jaime Seguel (sin detalle MPP)", "comentario": "Definir si la MPP se asocia al VIN o al crédito.", "fecha_act": null}, {"id": 59, "mesa": "Mesa 5", "fecha_minuta": "31-07-2026", "eje": "Estrategia de Canal", "tarea": "Ejecutar en agosto la prueba de canal (primer contacto Paula vs. Contact Center) y medir eficiencia", "responsable": "Trinidad Madrigal / Carlos Simesen", "prioridad": "Media", "plazo": "Agosto", "fecha_obj": null, "entregable": "Resultados de la prueba", "estado": "En curso", "avance": 0.3, "dependencias": "—", "comentario": "Piloto iniciado (ayer-hoy); primeros números no alentadores, conversión aún muy inferior al ejecutivo. Paula no reemplaza al contact.", "fecha_act": null}, {"id": 60, "mesa": "Mesa 5", "fecha_minuta": "31-07-2026", "eje": "Priorización", "tarea": "Cargar base del parque (1-5 años, desde 2021) para prueba de audiencias calificadas con Google", "responsable": "Roberto Jaunez / Trinidad Madrigal", "prioridad": "Baja", "plazo": "Por definir", "fecha_obj": null, "entregable": "Prueba Google Ads", "estado": "En curso", "avance": 0.2, "dependencias": "Tratamiento de datos personales", "comentario": "Trini solicitó la base del parque (correo a Luis Robert): recomendador de Google + audiencias similares en Meta. Prueba previa con resultados positivos.", "fecha_act": null}, {"id": 61, "mesa": "Mesa 5", "fecha_minuta": "06-08-2026", "eje": "Integración MPP", "tarea": "Separar la MPP en una base aparte (no como marca) con ejecutiva dedicada, recorrido y reporte de resultados", "responsable": "Roberto Jaunez / Carlos Simesen", "prioridad": "Alta", "plazo": "Por definir", "fecha_obj": null, "entregable": "Base MPP separada", "estado": "En curso", "avance": 0.15, "dependencias": "—", "comentario": "Pedido de Carlos. Plan (Felipe): 1) día 1 del mes, lista de MPP disponibles por marca; 2) sacarlas del predictivo si están contenidas; 3) predictivo MPP aparte con prioridad propia y pauta mensual (Carlos, los 5 de cada mes). Lanzar campaña predictivo MPP.", "fecha_act": null}, {"id": 62, "mesa": "Mesa 5", "fecha_minuta": "06-08-2026", "eje": "Priorización", "tarea": "Predefinir el programa cliente fiel (descuentos escalonados automáticos por RUT, estilo Coseche) para el Contact Center", "responsable": "Fernando Lagos / Carlos Simesen", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Programa cliente fiel", "estado": "No iniciado", "avance": 0, "dependencias": "Mirada por RUT (no patente/VIN)", "comentario": "Coseche ya escalona descuentos por historial; dejarlo predefinido y automático, priorizando segmentos de valor.", "fecha_act": null}, {"id": 63, "mesa": "Mesa 5", "fecha_minuta": "06-08-2026", "eje": "Priorización", "tarea": "Incorporar la mirada de ocupación de taller a la priorización del predictivo (focalizar talleres de baja agenda orgánica)", "responsable": "Fernando Lagos / Carlos Simesen", "prioridad": "Baja", "plazo": "Por definir", "fecha_obj": null, "entregable": "Priorización por taller", "estado": "No iniciado", "avance": 0, "dependencias": "Decisión comercial", "comentario": "Redistribuir mejora el balance por taller pero baja el volumen total de agendas; hoy se hace puntual (1-3 talleres).", "fecha_act": null}, {"id": 64, "mesa": "Mesa 5", "fecha_minuta": "06-08-2026", "eje": "Coordinación", "tarea": "Alinear con Gonza el direccionamiento del predictivo (flujos de fuga/retención y automatización de agenda)", "responsable": "Joaquín Cáceres / Roberto Jaunez", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Alineación con Gonza", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Gonza (data/tecnología) tiene foco en traqueo del cliente y automatización; la agenda automática en Quiter ya estaría integrada.", "fecha_act": null}, {"id": 65, "mesa": "Mesa 5", "fecha_minuta": "11-08-2026", "eje": "Predictivo", "tarea": "Marcar el número de intento (1-4) en el predictivo y definir la acción por intento (Contact, Paula, marketing, alerta de rescate)", "responsable": "Felipe Arroyo / Roberto Jaunez", "prioridad": "Media", "plazo": "Por definir", "fecha_obj": null, "entregable": "Predictivo por intento", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Según el intento se toma una acción distinta; el predictivo lo trabaja Contact + Paula + marketing, no solo el Contact.", "fecha_act": null}, {"id": 66, "mesa": "Mesa 5", "fecha_minuta": "11-08-2026", "eje": "Predictivo", "tarea": "Actualizar el kilometraje de camiones (Coseche/CBC) en el predictivo (distinto a pasajeros)", "responsable": "Fernando Lagos / Roberto Jaunez", "prioridad": "Baja", "plazo": "Por definir", "fecha_obj": null, "entregable": "Km de camiones corregido", "estado": "No iniciado", "avance": 0, "dependencias": "—", "comentario": "Base de camiones ~100-120 clientes (código CBC/JAN); el km se calcula distinto que en pasajeros.", "fecha_act": null}];
-const KPI = {"total": 66, "avance": 20, "completado": 4, "encurso": 29, "noiniciado": 33, "critico": 0, "alerta": 7, "entiempo": 33, "sin_fobj": 63, "sin_dep": 25, "sin_com": 7};
-const G='#0E5E52', ORANGE='#FF6B35';
+const KPI = {"total": 66, "avance": 20, "completado": 4, "encurso": 29, "noiniciado": 33, "alerta": 7, "sin_fobj": 63, "sin_dep": 25, "sin_com": 7};
 
 const stCls={'Completado':'b-ok','En curso':'b-proc','No iniciado':'b-neu','En riesgo':'b-crit','Bloqueado':'b-crit'};
 const stIcon={'Completado':'fa-circle-check','En curso':'fa-spinner','No iniciado':'fa-circle','En riesgo':'fa-triangle-exclamation','Bloqueado':'fa-ban'};
 const prCls={'Alta':'p-alta','Media':'p-media','Baja':'p-baja'};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=id=>document.getElementById(id);
 
-/* ---- KPI cards ---- */
+/* ---------- KPI cards interactivas ---------- */
+const KPI_CARDS=[
+  {ic:'mint',fa:'fa-list-check',val:KPI.total,lab:'Compromisos totales',act:'all',hint:'Ver todos'},
+  {ic:'org',gauge:KPI.avance,lab:'Cumplimiento general',act:'reset',hint:'Reiniciar filtros'},
+  {ic:'ok',fa:'fa-circle-check',val:KPI.completado,lab:'Finalizados / al día',act:'e:Completado',hint:'Filtrar completados'},
+  {ic:'proc',fa:'fa-spinner',val:KPI.encurso,lab:'En proceso',act:'e:En curso',hint:'Filtrar en curso'},
+  {ic:'neu',fa:'fa-hourglass-half',val:KPI.noiniciado,lab:'No iniciados',act:'e:No iniciado',hint:'Filtrar no iniciados'},
+  {ic:'crit',fa:'fa-bell',val:KPI.alerta,lab:'En alerta (Alta sin iniciar)',act:'alerta',hint:'Filtrar alertas'},
+];
 function renderKPIs(){
-  const k=[
-    {ic:'mint',fa:'fa-list-check',val:KPI.total,lab:'Compromisos totales'},
-    {ic:'org',gauge:KPI.avance,lab:'Cumplimiento general'},
-    {ic:'ok',fa:'fa-circle-check',val:KPI.completado,lab:'Finalizados / al día'},
-    {ic:'proc',fa:'fa-spinner',val:KPI.encurso,lab:'En proceso'},
-    {ic:'neu',fa:'fa-hourglass-half',val:KPI.noiniciado,lab:'No iniciados'},
-    {ic:'crit',fa:'fa-bell',val:KPI.alerta,lab:'En alerta (Alta sin iniciar)'},
-  ];
-  document.getElementById('kpis').innerHTML=k.map(x=>{
-    if(x.gauge!=null){
-      return `<div class="kpi big"><div class="ic ${x.ic}"><i class="fa-solid fa-gauge-high"></i></div>
-      <div class="gaugewrap"><div class="gauge" style="--p:${x.gauge};position:relative"><span>${x.gauge}%</span></div>
-      <div><div class="val" style="font-size:15px;color:var(--mute)">avance</div><div class="lab">${x.lab}</div></div></div></div>`;
-    }
-    return `<div class="kpi"><div class="ic ${x.ic}"><i class="fa-solid ${x.fa}"></i></div><div class="val">${x.val}</div><div class="lab">${x.lab}</div></div>`;
+  $('kpis').innerHTML=KPI_CARDS.map(x=>{
+    const inner = x.gauge!=null
+      ? `<div class="ic ${x.ic}"><i class="fa-solid fa-gauge-high"></i></div>
+         <div class="gaugewrap"><div class="gauge" style="--p:${x.gauge}"><span>${x.gauge}%</span></div>
+         <div><div class="lab" style="margin:0">${x.lab}</div><div class="hint">${x.hint}</div></div></div>`
+      : `<div class="ic ${x.ic}"><i class="fa-solid ${x.fa}"></i></div><div class="val">${x.val}</div><div class="lab">${x.lab}</div><div class="hint">${x.hint}</div>`;
+    return `<div class="kpi" data-act="${x.act}" onclick="kpiClick('${x.act}')">${inner}</div>`;
   }).join('');
 }
+function kpiClick(act){
+  clearInputs();
+  if(act==='e:Completado')$('fEstado').value='Completado';
+  else if(act==='e:En curso')$('fEstado').value='En curso';
+  else if(act==='e:No iniciado')$('fEstado').value='No iniciado';
+  else if(act==='alerta'){$('fPrio').value='Alta';$('fEstado').value='No iniciado';}
+  applyFilters();
+}
+function syncActiveKPI(){
+  const est=$('fEstado').value, pri=$('fPrio').value, others=$('q').value||$('fMesa').value||$('fEje').value||$('fResp').value;
+  let active=null;
+  if(!est&&!pri&&!others) active='all';
+  else if(est==='No iniciado'&&pri==='Alta') active='alerta';
+  else if(est&&!pri&&!others) active='e:'+est;
+  document.querySelectorAll('.kpi').forEach(k=>k.classList.toggle('active',k.dataset.act===active));
+}
 
-/* ---- Filters population ---- */
+/* ---------- Filtros ---------- */
 function uniq(fn){return [...new Set(DATA.flatMap(fn))].filter(Boolean).sort((a,b)=>a.localeCompare(b));}
-function fillSelect(id,vals){const s=document.getElementById(id);vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;s.appendChild(o);});}
+function fillSelect(id,vals){const s=$(id);vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;s.appendChild(o);});}
 fillSelect('fMesa',uniq(x=>[x.mesa]));
+fillSelect('fEje',uniq(x=>[x.eje]));
 fillSelect('fEstado',uniq(x=>[x.estado]));
 fillSelect('fResp',uniq(x=>(x.responsable||'').split('/').map(p=>p.trim())));
 fillSelect('fPrio',['Alta','Media','Baja']);
 
-/* ---- State ---- */
 let sortK='id', sortDir=1, view=[...DATA];
+function clearInputs(){['q','fMesa','fEje','fEstado','fResp','fPrio'].forEach(id=>$(id).value='');}
 function applyFilters(){
-  const q=document.getElementById('q').value.toLowerCase().trim();
-  const fm=document.getElementById('fMesa').value, fe=document.getElementById('fEstado').value,
-        fr=document.getElementById('fResp').value, fp=document.getElementById('fPrio').value;
+  const q=$('q').value.toLowerCase().trim();
+  const fm=$('fMesa').value, fj=$('fEje').value, fe=$('fEstado').value, fr=$('fResp').value, fp=$('fPrio').value;
   view=DATA.filter(x=>{
     if(fm&&x.mesa!==fm)return false;
+    if(fj&&x.eje!==fj)return false;
     if(fe&&x.estado!==fe)return false;
     if(fp&&x.prioridad!==fp)return false;
     if(fr&&!(x.responsable||'').includes(fr))return false;
     if(q){const blob=[x.id,x.mesa,x.eje,x.tarea,x.responsable,x.entregable,x.comentario,x.estado,x.plazo].join(' ').toLowerCase();if(!blob.includes(q))return false;}
     return true;
   });
-  sortView(); render();
+  sortView(); render(); updateCharts(view); syncActiveKPI();
 }
 function sortView(){
   view.sort((a,b)=>{
@@ -256,20 +276,27 @@ function sortView(){
     return ((va||0)-(vb||0))*sortDir;
   });
 }
+function fillColor(pct){
+  if(pct>=100) return 'linear-gradient(90deg,#34D399,#0E5E52)';
+  if(pct>0) return '#FF6B35';
+  return '#CBD5E1';
+}
 function render(){
-  const tb=document.getElementById('tbody');
-  document.getElementById('countPill').innerHTML=`<i class="fa-solid fa-filter"></i> ${view.length} de ${DATA.length}`;
-  if(!view.length){tb.innerHTML=`<tr><td colspan="9" class="empty"><i class="fa-solid fa-magnifying-glass"></i><br>Sin resultados para el filtro aplicado</td></tr>`;return;}
+  const tb=$('tbody');
+  $('countPill').innerHTML=`<i class="fa-solid fa-filter"></i> ${view.length} de ${DATA.length}`;
+  if(!view.length){tb.innerHTML=`<tr><td colspan="10" class="empty"><i class="fa-solid fa-magnifying-glass"></i><br>Sin resultados para el filtro aplicado</td></tr>`;return;}
   tb.innerHTML=view.map(x=>{
     const pct=Math.round((x.avance||0)*100);
-    return `<tr>
+    const alert=(x.prioridad==='Alta'&&x.estado==='No iniciado');
+    return `<tr class="${alert?'row-alert':''}">
       <td style="color:var(--mute2);font-weight:600">${x.id}</td>
       <td><span class="mesa-tag">${esc(x.mesa)}</span></td>
       <td class="tarea-cell">${esc(x.tarea)}<small>${esc(x.eje)} · ${esc(x.entregable||'')}</small></td>
       <td>${esc(x.responsable)}</td>
       <td><span class="badge ${prCls[x.prioridad]||'p-baja'}">${esc(x.prioridad)}</span></td>
       <td><span class="badge ${stCls[x.estado]||'b-neu'}"><i class="fa-solid ${stIcon[x.estado]||'fa-circle'}" style="font-size:9px;margin-right:5px"></i>${esc(x.estado)}</span></td>
-      <td><div class="prog"><div class="bar"><div class="fill" style="width:${pct}%"></div></div><span>${pct}%</span></div></td>
+      <td><div class="prog"><div class="bar"><div class="fill" style="width:${pct}%;background:${fillColor(pct)}"></div></div><span>${pct}%</span></div></td>
+      <td><span class="plazo-badge">${esc(x.plazo||'—')}</span></td>
       <td style="color:var(--mute);white-space:nowrap">${esc(x.fecha_minuta||'—')}</td>
       <td><div class="actions">
         <button class="ico-btn" title="Ver detalle" onclick="openModal(${x.id})"><i class="fa-solid fa-eye"></i></button>
@@ -279,7 +306,6 @@ function render(){
   }).join('');
 }
 
-/* ---- Sorting ---- */
 document.querySelectorAll('thead th[data-k]').forEach(th=>{
   th.addEventListener('click',()=>{
     const k=th.dataset.k;
@@ -290,7 +316,7 @@ document.querySelectorAll('thead th[data-k]').forEach(th=>{
   });
 });
 
-/* ---- Modal ---- */
+/* ---------- Modal ---------- */
 function rowSummary(x){
   const pct=Math.round((x.avance||0)*100);
   return `E2E PV · ${x.mesa} · Compromiso #${x.id}
@@ -305,25 +331,29 @@ Comentario: ${x.comentario||'—'}`;
 let modalId=null;
 function openModal(id){
   const x=DATA.find(d=>d.id===id);modalId=id;
-  document.getElementById('mMesa').textContent=`${x.mesa} · Compromiso #${x.id}`;
-  document.getElementById('mTitle').textContent=x.tarea;
+  $('mMesa').textContent=`${x.mesa} · Compromiso #${x.id}`;
+  $('mTitle').textContent=x.tarea;
   const pct=Math.round((x.avance||0)*100);
   const rows=[
     ['Eje / Tema',x.eje],['Entregable',x.entregable],['Responsable',x.responsable],
     ['Prioridad',`<span class="badge ${prCls[x.prioridad]}">${esc(x.prioridad)}</span>`],
     ['Estado',`<span class="badge ${stCls[x.estado]}">${esc(x.estado)}</span> &nbsp;${pct}% de avance`],
-    ['Plazo / Hito',x.plazo],['Fecha minuta',x.fecha_minuta],['Fecha objetivo',x.fecha_obj||'—'],
+    ['Plazo / Hito',`<span class="plazo-badge">${esc(x.plazo||'—')}</span>`],
+    ['Fecha minuta',x.fecha_minuta],['Fecha objetivo',x.fecha_obj||'—'],
     ['Dependencias',x.dependencias],['Comentario / actualización',x.comentario],
   ];
-  document.getElementById('mBody').innerHTML=rows.map(([k,v])=>`<div class="drow"><div class="k">${k}</div><div class="v">${v?(k.startsWith('Prioridad')||k.startsWith('Estado')?v:esc(v)):'—'}</div></div>`).join('');
-  document.getElementById('modalBg').classList.add('show');
+  $('mBody').innerHTML=rows.map(([k,v])=>{
+    const raw=(k.startsWith('Prioridad')||k.startsWith('Estado')||k.startsWith('Plazo'));
+    return `<div class="drow"><div class="k">${k}</div><div class="v">${v?(raw?v:esc(v)):'—'}</div></div>`;
+  }).join('');
+  $('modalBg').classList.add('show');
 }
-function closeModal(){document.getElementById('modalBg').classList.remove('show');}
-document.getElementById('modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')closeModal();});
+function closeModal(){$('modalBg').classList.remove('show');}
+$('modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-/* ---- Clipboard ---- */
-function toast(msg){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+/* ---------- Portapapeles ---------- */
+function toast(msg){const t=$('toast');$('toastMsg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 function doCopy(txt){
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>toast('Resumen copiado al portapapeles')).catch(()=>fallback(txt));}
   else fallback(txt);
@@ -332,34 +362,40 @@ function fallback(txt){const ta=document.createElement('textarea');ta.value=txt;
 function copyRow(id){doCopy(rowSummary(DATA.find(d=>d.id===id)));}
 function copyFromModal(){if(modalId!=null)doCopy(rowSummary(DATA.find(d=>d.id===modalId)));}
 
-/* ---- Events ---- */
-['q','fMesa','fEstado','fResp','fPrio'].forEach(id=>document.getElementById(id).addEventListener('input',applyFilters));
-document.getElementById('clear').addEventListener('click',()=>{['q','fMesa','fEstado','fResp','fPrio'].forEach(id=>document.getElementById(id).value='');applyFilters();});
+/* ---------- Eventos ---------- */
+let qt;
+$('q').addEventListener('input',()=>{clearTimeout(qt);qt=setTimeout(applyFilters,140);});
+['fMesa','fEje','fEstado','fResp','fPrio'].forEach(id=>$(id).addEventListener('change',applyFilters));
+$('clear').addEventListener('click',()=>{clearInputs();applyFilters();});
 
-/* ---- Render base (independiente de CDNs) ---- */
-renderKPIs();applyFilters();
+/* ---------- Gráficos reactivos ---------- */
+let chMesa=null,chEstado=null,chPrio=null;
+function grp(arr,key){const m={};arr.forEach(x=>{m[x[key]]=(m[x[key]]||0)+1;});return m;}
+function avgByMesa(arr){const s={},c={};arr.forEach(x=>{s[x.mesa]=(s[x.mesa]||0)+(x.avance||0);c[x.mesa]=(c[x.mesa]||0)+1;});const o={};Object.keys(s).sort().forEach(k=>o[k]=Math.round(s[k]/c[k]*100));return o;}
+const EST_COLOR={'Completado':'#6EE7B7','En curso':'#FCD34D','No iniciado':'#CBD5E1','En riesgo':'#FCA5A5','Bloqueado':'#F87171'};
+const PRI_COLOR={'Alta':'#FDBA74','Media':'#FCD34D','Baja':'#CBD5E1'};
 
-/* ---- Charts (se degradan si el CDN no cargó) ---- */
-if(window.Chart){ try{
-function grp(key){const m={};DATA.forEach(x=>{m[x[key]]=(m[x[key]]||0)+1;});return m;}
-function avgByMesa(){const s={},c={};DATA.forEach(x=>{s[x.mesa]=(s[x.mesa]||0)+(x.avance||0);c[x.mesa]=(c[x.mesa]||0)+1;});const o={};Object.keys(s).sort().forEach(k=>o[k]=Math.round(s[k]/c[k]*100));return o;}
-Chart.defaults.font.family="'Poppins',sans-serif";Chart.defaults.font.size=12;Chart.defaults.color='#64748B';
+function updateCharts(data){
+  $('liveMesa').textContent = data.length===DATA.length ? 'vista completa' : 'vista filtrada';
+  if(!window.Chart) return;
+  const am=avgByMesa(data), es=grp(data,'estado'), pr=grp(data,'prioridad');
+  const esOrder=['Completado','En curso','No iniciado','En riesgo','Bloqueado'].filter(k=>es[k]);
+  const prOrder=['Alta','Media','Baja'].filter(k=>pr[k]);
+  [chMesa,chEstado,chPrio].forEach(c=>{if(c)c.destroy();});
+  const noData={id:'noData',afterDraw:(c)=>{if(c.data.datasets[0].data.length===0){const{ctx,chartArea}=c;ctx.save();ctx.fillStyle='#94A3B8';ctx.font="12px Poppins";ctx.textAlign='center';ctx.fillText('Sin datos en el filtro',(chartArea.left+chartArea.right)/2,(chartArea.top+chartArea.bottom)/2);ctx.restore();}}};
 
-const am=avgByMesa();
-new Chart(document.getElementById('chMesa'),{type:'bar',data:{labels:Object.keys(am),datasets:[{data:Object.values(am),backgroundColor:'#CCFDDC',borderColor:'#0E5E52',borderWidth:1.5,borderRadius:8,maxBarThickness:54}]},
- options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw+'% de avance'}}},scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#EEF2F6'}},x:{grid:{display:false}}},responsive:true,maintainAspectRatio:false}});
+  chMesa=new Chart($('chMesa'),{type:'bar',data:{labels:Object.keys(am),datasets:[{data:Object.values(am),backgroundColor:'#CCFDDC',borderColor:'#0E5E52',borderWidth:1.5,borderRadius:8,maxBarThickness:54}]},
+   options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw+'% de avance'}}},scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#EEF2F6'}},x:{grid:{display:false}}},responsive:true,maintainAspectRatio:false,animation:{duration:400}},plugins:[noData]});
 
-const es=grp('estado');const esOrder=['Completado','En curso','No iniciado','En riesgo','Bloqueado'].filter(k=>es[k]);
-new Chart(document.getElementById('chEstado'),{type:'doughnut',data:{labels:esOrder,datasets:[{data:esOrder.map(k=>es[k]),backgroundColor:{'Completado':'#6EE7B7','En curso':'#FCD34D','No iniciado':'#CBD5E1','En riesgo':'#FCA5A5','Bloqueado':'#F87171'},borderColor:'#fff',borderWidth:2}].map(d=>({...d,backgroundColor:esOrder.map(k=>d.backgroundColor[k])}))},
- options:{cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:12,font:{size:11.5}}}},responsive:true,maintainAspectRatio:false}});
+  chEstado=new Chart($('chEstado'),{type:'doughnut',data:{labels:esOrder,datasets:[{data:esOrder.map(k=>es[k]),backgroundColor:esOrder.map(k=>EST_COLOR[k]),borderColor:'#fff',borderWidth:2}]},
+   options:{cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:12,font:{size:11.5}}}},responsive:true,maintainAspectRatio:false,animation:{duration:400}},plugins:[noData]});
 
-const pr=grp('prioridad');const prOrder=['Alta','Media','Baja'].filter(k=>pr[k]);
-new Chart(document.getElementById('chPrio'),{type:'doughnut',data:{labels:prOrder,datasets:[{data:prOrder.map(k=>pr[k]),backgroundColor:prOrder.map(k=>({'Alta':'#FDBA74','Media':'#FCD34D','Baja':'#CBD5E1'}[k])),borderColor:'#fff',borderWidth:2}]},
- options:{cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:12,font:{size:11.5}}}},responsive:true,maintainAspectRatio:false}});
+  chPrio=new Chart($('chPrio'),{type:'doughnut',data:{labels:prOrder,datasets:[{data:prOrder.map(k=>pr[k]),backgroundColor:prOrder.map(k=>PRI_COLOR[k]),borderColor:'#fff',borderWidth:2}]},
+   options:{cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:12,font:{size:11.5}}}},responsive:true,maintainAspectRatio:false,animation:{duration:400}},plugins:[noData]});
+}
+if(window.Chart){Chart.defaults.font.family="'Poppins',sans-serif";Chart.defaults.font.size=12;Chart.defaults.color='#64748B';}
 
-} catch(e){ console.warn('Charts no disponibles:', e); } }
-
-/* ---- Data quality panel ---- */
+/* ---------- Panel calidad de datos ---------- */
 const dq=[
   ['Fecha objetivo', KPI.sin_fobj+' de '+KPI.total+' registros sin fecha objetivo definida'],
   ['Mesa 4', 'Sin sesión ni compromisos registrados (vacío de gobernanza)'],
@@ -368,7 +404,10 @@ const dq=[
   ['Sucursal / marca', 'La matriz no registra sucursal ni marca por compromiso'],
   ['Fecha de actualización', 'Solo se completa manualmente en filas editadas'],
 ];
-document.getElementById('dqlist').innerHTML=dq.map(([k,v])=>`<li><i class="fa-solid fa-circle"></i><span><b>${k}:</b> ${v}</span></li>`).join('');
+$('dqlist').innerHTML=dq.map(([k,v])=>`<li><i class="fa-solid fa-circle"></i><span><b>${k}:</b> ${v}</span></li>`).join('');
 
+/* ---------- Init ---------- */
+renderKPIs();
+applyFilters();
 </script>
 </body></html>
